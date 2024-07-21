@@ -19,8 +19,12 @@
 
     <script>
       if ("serviceWorker" in navigator) {
-        window.addEventListener("load", () => {
-          navigator.serviceWorker.register("/service-worker.js")
+        window.addEventListener("load", async () => {
+          if (navigator.serviceWorker.controller) {
+            const offlineStatus = document.getElementById("offline-status")
+            offlineStatus.textContent = "Offline-first"
+          }
+          await navigator.serviceWorker.register("/service-worker.js")
         })
       }
     </script>
@@ -33,7 +37,7 @@
       <li id="spark">Spark</li>
       <li id="superhuman">Superhuman</li>
     </ul>
-    <sub>Version unknown</sub>
+    <sub>Version unknown | <span id="offline-status">Online-only</span></sub>
 
     <script>
       const toGmail = (email, threadId) => `https://mail.google.com/mail/u/${email}/#all/${threadId}`
