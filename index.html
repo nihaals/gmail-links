@@ -17,7 +17,7 @@
 
     <script>
       const toGmail = (email, threadId) => `https://mail.google.com/mail/u/${email}/#all/${threadId}`
-      const toSuperhuman = (email, threadId) => `superhuman://${email}/inbox/thread/${threadId}`
+      const toSuperhuman = (email, threadId) => `superhuman://${email}/thread/${threadId}`
       const toMimestream = (email, threadId) => `mimestream:///open/g/${email}/t/${threadId}`
       const toSpark = (email, threadId) => {
         const threadIdDecimal = BigInt(`0x${threadId}`).toString()
