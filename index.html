@@ -4,6 +4,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Gmail Links</title>
     <meta name="description" content="Gmail Links" />
+
+    <style>
+      @media (prefers-color-scheme: dark) {
+        body {
+          background-color: #121212;
+          color: white;
+        }
+        a {
+          color: #4a90e2;
+        }
+      }
+    </style>
   </head>
   <body>
     <h1>Gmail Links</h1>
@@ -64,7 +76,7 @@
         let email = ""
         let threadId = ""
         if (url.startsWith("readdle-spark://")) {
-          [email, threadId] = fromSpark(url)
+          ;[email, threadId] = fromSpark(url)
         }
 
         if (!email || !threadId) {
