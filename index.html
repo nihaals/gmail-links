@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gmail Links</title>
+    <meta name="description" content="Gmail Links" />
+  </head>
+  <body>
+    <h1>Gmail Links</h1>
+    <ul>
+      <li id="gmail">Gmail</li>
+      <li id="mimestream">Mimestream</li>
+      <li id="spark">Spark</li>
+      <li id="superhuman">Superhuman</li>
+    </ul>
+    <script>
+      const toGmail = (email, threadId) => `https://mail.google.com/mail/u/${email}/#all/${threadId}`
+      const toSuperhuman = (email, threadId) =>
+        `superhuman://${email}/inbox/thread/${threadId}`
+      const toMimestream = (email, threadId) => `mimestream:///open/g/${email}/t/${threadId}`
+
+      const toSpark = (email, threadId) => {
+        const threadIdDecimal = BigInt(`0x${threadId}`).toString()
+        const base64 = btoa(`A:${email};gID:${threadIdDecimal};ID:`)
+        return `readdle-spark://bl=${encodeURIComponent(base64)}`
+      }
+
+      const setLink = (id, url) => {
+        const element = document.getElementById(id)
+        const a = document.createElement("a")
+        a.href = url
+        a.textContent = element.textContent
+        element.textContent = ""
+        element.appendChild(a)
+      }
+
+      // Fragment is `#<email>/<thread_id>`
+      try {
+        const fragment = window.location.hash.slice(1)
+        if (!fragment) {
+          throw new Error("Fragment is empty")
+        }
+        const [email, thread_id] = fragment.split("/")
+        if (!email || !thread_id) {
+          throw new Error("Email or thread id is empty")
+        }
+
+        setLink("gmail", toGmail(email, thread_id))
+        setLink("mimestream", toMimestream(email, thread_id))
+        setLink("spark", toSpark(email, thread_id))
+        setLink("superhuman", toSuperhuman(email, thread_id))
+      } catch (error) {
+        window.alert(error)
+      }
+    </script>
+  </body>
+</html>
