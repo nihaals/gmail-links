@@ -25,6 +25,29 @@
         const base64 = btoa(`A:${email};gID:${threadIdDecimal};ID:`)
         return `readdle-spark://bl=${encodeURIComponent(base64)}`
       }
+      const fromSpark = (url) => {
+        const bl = atob(decodeURIComponent(url).split("bl=")[1])
+
+        let email = ""
+        let threadId = ""
+        bl.split(";").forEach((x) => {
+          const [key, value] = x.split(":")
+
+          if (key === "A") {
+            email = value
+          } else if (key === "gID") {
+            threadId = BigInt(value).toString(16)
+          }
+        })
+
+        if (!email) {
+          throw new Error("Email not found")
+        } else if (!threadId) {
+          throw new Error("Thread id not found")
+        }
+
+        return [email, threadId]
+      }
 
       const setLink = (id, url) => {
         const element = document.getElementById(id)
@@ -35,21 +58,57 @@
         element.appendChild(a)
       }
 
-      // Fragment is `#<email>/<thread_id>`
-      try {
+      const parseClientUrl = (fragment) => {
+        // Fragment is `#url=<url>`
+        const url = fragment.slice(4)
+        let email = ""
+        let threadId = ""
+        if (url.startsWith("readdle-spark://")) {
+          [email, threadId] = fromSpark(url)
+        }
+
+        if (!email || !threadId) {
+          throw new Error("Failed to parse URL")
+        }
+
+        return [email, threadId]
+      }
+
+      const handleEmailLink = (fragment) => {
+        // Fragment is `#<email>/<thread_id>`
+        const [email, threadId] = fragment.split("/")
+
+        if (!email || !threadId) {
+          throw new Error("Email or thread id is empty")
+        }
+
+        setLink("gmail", toGmail(email, threadId))
+        setLink("mimestream", toMimestream(email, threadId))
+        setLink("spark", toSpark(email, threadId))
+        setLink("superhuman", toSuperhuman(email, threadId))
+      }
+
+      const main = () => {
         const fragment = window.location.hash.slice(1)
         if (!fragment) {
           throw new Error("Fragment is empty")
         }
-        const [email, thread_id] = fragment.split("/")
-        if (!email || !thread_id) {
-          throw new Error("Email or thread id is empty")
-        }
 
-        setLink("gmail", toGmail(email, thread_id))
-        setLink("mimestream", toMimestream(email, thread_id))
-        setLink("spark", toSpark(email, thread_id))
-        setLink("superhuman", toSuperhuman(email, thread_id))
+        if (fragment.startsWith("url=")) {
+          const [email, threadId] = parseClientUrl(fragment)
+          const hash = `${email}/${threadId}`
+
+          window.location.hash = hash
+          handleEmailLink(hash)
+        } else if (fragment.split("/").length === 2) {
+          handleEmailLink(fragment)
+        } else {
+          throw new Error("Invalid fragment")
+        }
+      }
+
+      try {
+        main()
       } catch (error) {
         window.alert(error)
       }
