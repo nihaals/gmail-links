@@ -51,8 +51,16 @@
 
       const fromSuperhuman = (url) => {
         // Assume is valid
+        // https://mail.superhuman.com/{email}/inbox/.../thread/{threadId}#app
         const email = url.replace("https://mail.superhuman.com/", "").split("/")[0]
         const threadId = url.split("/").slice(-1)[0].split("#")[0]
+        return [email, threadId]
+      }
+      const fromMimestream = (url) => {
+        // Assume is valid
+        // https://links.mimestream.com/g/{email]/t/{threadId}
+        const email = url.replace("https://links.mimestream.com/g/", "").split("/")[0]
+        const threadId = url.split("/").slice(-1)[0]
         return [email, threadId]
       }
       const fromSpark = (url) => {
@@ -95,6 +103,8 @@
         let threadId = ""
         if (url.startsWith("readdle-spark://")) {
           ;[email, threadId] = fromSpark(url)
+        } else if (url.startsWith("https://links.mimestream.com/")) {
+          ;[email, threadId] = fromMimestream(url)
         } else if (url.startsWith("https://mail.superhuman.com/")) {
           ;[email, threadId] = fromSuperhuman(url)
         } else {
