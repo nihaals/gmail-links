@@ -7,7 +7,7 @@ self.addEventListener("install", (event) => {
     (async () => {
       const cache = await caches.open(cacheName)
       await cache.addAll(precachedAssets)
-    })()
+    })(),
   )
 })
 
@@ -18,7 +18,7 @@ self.addEventListener("activate", async (event) => {
       if (name !== cacheName) {
         await caches.delete(name)
       }
-    })
+    }),
   )
 })
 
@@ -38,6 +38,6 @@ self.addEventListener("fetch", async (event) => {
         return response
       })()
       return cachedResponse || networkResponse
-    })()
+    })(),
   )
 })
