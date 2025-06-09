@@ -20,10 +20,6 @@
     <script>
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", async () => {
-          if (navigator.serviceWorker.controller) {
-            const offlineStatus = document.getElementById("offline-status")
-            offlineStatus.textContent = "Offline-first"
-          }
           await navigator.serviceWorker.register("/service-worker.js")
         })
       }
