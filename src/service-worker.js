@@ -6,8 +6,8 @@ const updateOfflineStatus = async (response) => {
   const responseText = await response.text()
   // DOMParser is not available in service workers
   const newResponseText = responseText.replace(
-    '<span id="offline-status">Online-only</span>',
-    '<span id="offline-status">Offline-first</span>',
+    '<span id="offline-status" class="online-only">Online-only</span>',
+    '<span id="offline-status" class="offline-first">Offline-first</span>',
   )
   return new Response(newResponseText, {
     headers: response.headers,

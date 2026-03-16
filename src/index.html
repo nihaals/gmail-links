@@ -10,13 +10,65 @@
         font-family: system-ui, sans-serif;
       }
 
+      h1 {
+        margin: 0.25em 0 0;
+      }
+
+      ul {
+        margin: 0.75em 0;
+      }
+
+      .status-footer {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.3em 1em;
+        font-family: monospace;
+        font-size: 0.75rem;
+      }
+
+      #offline-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: #595959;
+      }
+
+      #offline-status::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+      }
+
+      .online-only::before {
+        background-color: #d32f2f;
+      }
+
+      .offline-first::before {
+        background-color: #2e7d32;
+      }
+
+      .version {
+        word-break: break-all;
+        color: #767676;
+      }
+
       @media (prefers-color-scheme: dark) {
         body {
           background-color: #121212;
           color: white;
         }
+
         a {
           color: #4a90e2;
+        }
+
+        #offline-status {
+          color: #7e7e7e;
+        }
+
+        .version {
+          color: #a1a1a1;
         }
       }
     </style>
@@ -37,7 +89,10 @@
       <li id="spark">Spark</li>
       <li id="superhuman">Superhuman</li>
     </ul>
-    <sub>Version unknown | <span id="offline-status">Online-only</span></sub>
+    <div class="status-footer">
+      <span id="offline-status" class="online-only">Online-only</span>
+      <span class="version">Version unknown</span>
+    </div>
 
     <script>
       const toGmail = (email, threadId) => `https://mail.google.com/mail/u/${email}/#all/${threadId}`
